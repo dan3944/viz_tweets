@@ -37,7 +37,7 @@ def viz_top_tweets(tweets_df, handle):
         .sort_values('interactions') \
         .tail(50) \
         .assign(text=lambda df: df['text'].str.replace('\n', ' \\n ')) \
-        .plot.barh(x='text', y=['retweets', 'favorites'], figsize=(18, 15)) \
+        .plot.barh(x='text', y=['retweets', 'favorites'], figsize=(15, 15)) \
         .set(xlabel='Interactions', ylabel='Tweet', title=f'@{handle}\'s Most Popular Tweets')
 
     plt.savefig(f'{handle}/tweets.png', bbox_inches='tight')
