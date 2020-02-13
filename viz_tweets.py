@@ -4,18 +4,13 @@ import os
 import pandas as pd
 import tweepy
 
-consumer_key = os.environ['TWITTER_CONSUMER_KEY']
-consumer_secret = os.environ['TWITTER_CONSUMER_SECRET']
-access_token = os.environ['TWITTER_ACCESS_TOKEN']
-access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth)
-
 
 # download tweets to csv so we don't need query the API every time
 def download_tweets(handle):
+    auth = tweepy.OAuthHandler(os.environ['CONSUMER_KEY'], os.environ['CONSUMER_SECRET'])
+    auth.set_access_token(os.environ['ACCESS_TOKEN'], os.environ['ACCESS_TOKEN_SECRET'])
+    api = tweepy.API(auth)
+
     df = pd.DataFrame([
         {
             'text': tweet.full_text,
@@ -42,7 +37,7 @@ def viz_top_tweets(tweets_df, handle):
         .sort_values('interactions') \
         .tail(50) \
         .assign(text=lambda df: df['text'].str.replace('\n', ' \\n ')) \
-        .plot.barh(x='text', y=['retweets', 'favorites'], figsize=(20, 18)) \
+        .plot.barh(x='text', y=['retweets', 'favorites'], figsize=(18, 15)) \
         .set(xlabel='Interactions', ylabel='Tweet', title=f'@{handle}\'s Most Popular Tweets')
 
     plt.savefig(f'{handle}/tweets.png', bbox_inches='tight')
